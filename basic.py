@@ -23,6 +23,7 @@ class ValveMux:
         self.__pins = []
         self.incMul = 5
 
+
         if (len(pins) != (len(deltaT))):
             print("we have a problem!!!")
             self.deltaT = []
@@ -103,7 +104,10 @@ class ValveMux:
         self.__pins[pinID].on()
 
     def giveReport(self):
-        print(str(datetime.datetime.now()) + ", " + str(self.getActiveValve()))
+        filename = "log.txt"
+        file = open(filename, "a")
+        file.write(str(datetime.datetime.now()) + ", " + str(self.getActiveValve())+"\n")
+        file.close()
 
 
 def close(mux, thread):
@@ -119,7 +123,10 @@ def muxHelpler(mux, x, deltadelta):
 
 if __name__ == "__main__":
     outList = [5, 6, 13, 26]
+    # you can also specify the intial period
     mainMux = ValveMux(outList, [5, 5, 5, 5])
+
+    mainMux = ValveMux(outList)
 
     # run after we are done with everything
     t1 = threading.Thread(target=mainMux.run)
@@ -138,14 +145,19 @@ if __name__ == "__main__":
     ExitButton = Button(win, text='Exit', font=myFont, command=lambda: close(mainMux, t1), bg='red', height=5, width=10)
     ExitButton.grid(row=1, column=5)
 
+
+    # increment size buttons
     oneSec = Button(win, text='5s', font=myFont, command=lambda: mainMux.set_incMul(5) , bg='RoyalBlue2', height=5, width=5)
     oneSec.grid(row=2, column=5)
 
     oneMin = Button(win, text='1m', font=myFont, command=lambda: mainMux.set_incMul(60), bg='RoyalBlue2', height=5, width=5)
     oneMin.grid(row=3, column=5)
 
+    fiveMin = Button(win, text='5m', font=myFont, command=lambda: mainMux.set_incMul(300), bg='RoyalBlue2', height=5, width=5)
+    fiveMin.grid(row=4, column=5)
 
 
+    # buttons per valve!
     buttonArray = []
     ctrl_buttonArray = []
     labelArray = []
@@ -153,6 +165,7 @@ if __name__ == "__main__":
 
     for pinPointer in range(len(outList)):
         labelArray.append(Label(win, text=mainMux.get_delta(pinPointer)))
+        # valve incremnet text
         labelArray[pinPointer].grid(row=1, column=pinPointer + 1)
 
         buttonArray.append(
@@ -161,6 +174,7 @@ if __name__ == "__main__":
                    bg='lightgreen', height=5, width=10))
         buttonArray[pinPointer].grid(row=2, column=pinPointer + 1)
 
+        #  increment/ decrement buttons
         ctrl_buttonArray.append(
             Button(win, text='+', font=myFont,
                    command=lambda x=pinPointer: muxHelpler(mainMux, x, 1),
