@@ -122,11 +122,11 @@ def muxHelpler(mux, x, deltadelta):
 
 
 if __name__ == "__main__":
-    outList = [5, 6, 13, 26]
+    outList = [5, 6, 13]
     # you can also specify the intial period
-    mainMux = ValveMux(outList, [5, 5, 5, 5])
+    mainMux = ValveMux(outList, [5, 5, 5])
 
-    mainMux = ValveMux(outList)
+    #mainMux = ValveMux(outList)
 
     # run after we are done with everything
     t1 = threading.Thread(target=mainMux.run)
@@ -135,7 +135,7 @@ if __name__ == "__main__":
 
     incrementVal = 1
 
-    # define GUI context
+    # define GUI contex
     win = Tk()
     win.title("Gas Sample Selector")
     win.geometry('1000x500')
